@@ -1,0 +1,93 @@
+#############   PROCEDIMIENTO ALMACENADO: SP_ELIMINAR   #################################
+CREATE PROCEDURE sp_Eliminar
+	@pkMedicoID INT
+AS
+BEGIN
+    DELETE FROM tblMedicos
+    WHERE pkMedicoID = @pkMedicoID
+END
+
+
+
+
+############################   TRIGGER AFTER DELETE   #################################
+CREATE TRIGGER tr_log_tblMedicos  
+ON tblMedicos  
+AFTER DELETE  
+AS  
+BEGIN  
+    INSERT INTO log_table_tblMedicos (Nombre, ApellidoPaterno, ApellidoMaterno, CedulaProfesional, fkEspecialidadID, FechaNacimiento, CrBy, CrDt, DltBy, FechaEliminacion)  
+    SELECT Nombre, ApellidoPaterno, ApellidoMaterno, CedulaProfesional, fkEspecialidadID, FechaNacimiento, CrBy, CrDt, SUSER_NAME() , GETDATE()  
+    FROM DELETED  
+END;  
+
+
+
+
+########################   PROCEDIMIENTO ALMACENADO: SP_REGISTRAR   #################################
+CREATEPROCEDURE [dbo].[sp_Registrar]
+    @Nombre VARCHAR(50),
+    @ApellidoPaterno VARCHAR(50),
+    @ApellidoMaterno VARCHAR(50),
+    @CedulaProfesional CHAR(10),
+    @fkEspecialidadID INT,
+    @FechaNacimiento DATE,
+    @CrBy INT,
+	@CrDt DATETIME
+AS
+BEGIN
+		DECLARE @Edad INT
+		SET @Edad = dbo.fn_CalcularEdad(@FechaNacimiento)
+
+		IF (@Edad < 25)
+		BEGIN
+			RAISERROR('El médico no puede ser menor de 25 años', 16, 1)
+			RETURN
+		END
+
+    INSERT INTO tblMedicos (Nombre, ApellidoPaterno, ApellidoMaterno, CedulaProfesional, fkEspecialidadID, FechaNacimiento, CrBy, CrDt)
+    VALUES (@Nombre, @ApellidoPaterno, @ApellidoMaterno, @CedulaProfesional, @fkEspecialidadID, @FechaNacimiento, @CrBy, @CrDt)
+END
+
+
+
+
+#############################   FUNCION FN_CALCULAREDAD  #################################
+CREATE FUNCTION [dbo].[fn_CalcularEdad] (@FechaNacimiento DATE)
+RETURNS INT
+AS
+BEGIN
+    DECLARE @Edad INT
+    SET @Edad = DATEDIFF(YEAR, @FechaNacimiento, GETDATE())
+    IF (MONTH(@FechaNacimiento) > MONTH(GETDATE()))
+        OR (MONTH(@FechaNacimiento) = MONTH(GETDATE()) AND DAY(@FechaNacimiento) > DAY(GETDATE()))
+        SET @Edad = @Edad - 1
+    RETURN @Edad
+END
+
+
+
+
+########################   PROCEDIMIENTO ALMACENADO: SP_EDITAR   #################################
+ALTER PROCEDURE [dbo].[sp_Editar]
+    @pkMedicoID INT,
+    @Nombre VARCHAR(50),
+    @ApellidoPaterno VARCHAR(50),
+    @ApellidoMaterno VARCHAR(50),
+    @CedulaProfesional CHAR(10),
+    @fkEspecialidadID INT,
+    @FechaNacimiento DATE,
+    @CrBy INT
+AS
+BEGIN
+    UPDATE tblMedicos
+    SET Nombre = @Nombre,
+        ApellidoPaterno = @ApellidoPaterno,
+        ApellidoMaterno = @ApellidoMaterno,
+        CedulaProfesional = @CedulaProfesional,
+        fkEspecialidadID = @fkEspecialidadID,
+        FechaNacimiento = @FechaNacimiento,
+        CrBy = @CrBy
+    WHERE pkMedicoID = @pkMedicoID
+END
+

@@ -1,0 +1,70 @@
+﻿@model List<CRUD_de_medicos.Models.Medico>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row" style="margin-top:30px">
+    <div class="col-sm-12">
+
+        <div class="card">
+            <div class="card-header text-white bg-dark">
+                <h4 class="card-title">Lista De Medicos</h4>
+            </div>
+            <div class="card-body ">
+                <a class="btn btn-success" href="@Url.Action("Registrar2","Medico")">Nuevo Medico</a>
+                <hr />
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Apellido Paterno</th>
+                                <th>Apellido Materno</th>
+                                <th>Cedula Profesional</th>
+                                <th>ID Especialidad</th>
+                                <th>Fecha de Nacimiento</th>
+                                <th>Creaado por</th>
+                                <th>Fechade Creación</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (CRUD_de_medicos.Models.Medico item in Model)
+                            {
+                                <tr>
+                                    <td>@item.pkMedicoID</td>
+                                    <td>@item.Nombre</td>
+                                    <td>@item.ApellidoPaterno</td>
+                                    <td>@item.ApellidoMaterno</td>
+                                    <td>@item.CedulaProfesional</td>
+                                    <td>@item.fkEspecialidadID</td>
+                                    <td>@item.FechaNacimiento </td>
+                                    <td>@item.CrBy</td>
+                                    <td>@item.CrDt</td>
+
+                                    <td>
+                                        <a class="btn btn-primary btn-sm" href="@Url.Action("Editar2","Medico", new { idmedico = item.pkMedicoID })">Editar</a>
+                                        <a class="btn btn-danger btn-sm" href="@Url.Action("Eliminar2","Medico", new { idmedico = item.pkMedicoID })">Eliminar</a>
+
+                                    </td>
+
+                                </tr>
+
+                            }
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+

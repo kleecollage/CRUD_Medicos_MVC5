@@ -1,0 +1,84 @@
+﻿@model CRUD_de_medicos.Models.Medico
+
+@{
+    ViewBag.Title = "Eliminar2";
+}
+
+<h2>Eliminar2</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Medico</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ApellidoPaterno)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ApellidoPaterno)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ApellidoMaterno)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ApellidoMaterno)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CedulaProfesional)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CedulaProfesional)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fkEspecialidadID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fkEspecialidadID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaNacimiento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaNacimiento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CrDt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CrDt)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm("Eliminar2", "Medico", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" name="action" value="Eliminar" class="btn btn-danger" />
+            <input type="hidden" name="pkMedicoID" value="@Model.pkMedicoID" />
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+
+</div>
